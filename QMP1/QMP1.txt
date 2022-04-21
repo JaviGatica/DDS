@@ -1,0 +1,40 @@
+class InfoPrenda
+	Categoria categoria
+
+	infoPrenda(Categoria categoria)
+		this.categoria = categoria
+
+Enum Color = {ROJO, VERDE, AZUL, AMARILLO,...}
+	
+Enum Tipo = {REMERA, PANTALON, ZAPATILLAS, OJOTAS, COLLAR,....}
+
+Enum Categoria = {PSUPERIOR, PINFERIOR, CALZADO, ACCESORIO}
+
+
+class Prenda
+	InfoPrenda infoPrenda
+	String material
+	Color colorPrincipal
+	Color colorSegundario 
+
+	prenda(InfoPrenda info, String material, Color color)
+		if(info.InfoPrendaValido)
+			this.InfoPrenda = info
+		else
+			throw new prendaInvalidaException(message = "el tipo de prenda debe coincidir con su categoria")
+		this.material = material
+		this.colorPrincipal = color
+
+	categoria()
+		this.infoPrenda.getCategoria()
+
+	setColorSegundario(Color color)
+		this.colorSegundario = color
+
+
+
+InfoPrenda pantalon = InfoPrenda(PINFERIOR)
+InfoPrenda remera = InfoPrenda(PSUPERIOR)
+InfoPrenda zapatillas = InfoPrenda(CALZADO)
+InfoPrenda collar = InfoPrenda(ACCESORIO)
+	...
