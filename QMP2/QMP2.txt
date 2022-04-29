@@ -1,0 +1,105 @@
+class InfoPrenda
+	Categoria categoria
+
+	infoPrenda(Categoria categoria)
+		this.categoria = categoria
+
+
+Enum Color = {ROJO, VERDE, AZUL, AMARILLO,...}
+	
+Enum Tipo = {REMERA, PANTALON, ZAPATILLAS, OJOTAS, COLLAR,....}
+
+Enum Categoria = {PSUPERIOR, PINFERIOR, CALZADO, ACCESORIO}
+
+
+//A futuro quizas necesite una clase para el material, pero con la informacion que tengo ahora solo veo util modelar la tela
+//class Material  
+//	Tela trama 
+	
+//Este enum seria "Tela" y formaria parte de la clase material
+
+Enum Material = {LISA, RAYADA, LUNARES, ESTAMPADA}
+
+
+
+class Prenda
+	InfoPrenda infoPrenda
+	Material material
+	Color colorPrincipal
+	Color colorSegundario 
+
+	prenda(InfoPrenda info, Material material, Color color1, Color color2)
+		if(info != NULL)
+			this.InfoPrenda = info
+		else
+			throw new prendaInvalidaException(message = "el tipo de prenda debe coincidir con su categoria")
+		if(material == null)
+			this.material = LISA
+		else	
+			this.material = material
+		this.colorPrincipal = color1
+		this.colorSegundario = color2
+
+	categoria()
+		this.infoPrenda.getCategoria()
+
+
+
+//Si el infoPrenda correspondiente a una prenda no esta cargado en sistema no sera valido
+	esValida()
+		if(infoPrenda == NULL)
+			return false;
+		else
+			return true;
+		
+
+InfoPrenda pantalon = InfoPrenda(PINFERIOR)
+InfoPrenda remera = InfoPrenda(PSUPERIOR)
+InfoPrenda zapatillas = InfoPrenda(CALZADO)
+InfoPrenda collar = InfoPrenda(ACCESORIO)
+	...
+
+class Uniforme
+	Prenda prendaSup
+	Prenda prendaInf
+	Prenda calzado
+	String institucion	
+
+	uniforme(prenda pS, prenda pI, prenda pC, String institucion)
+		if(pS.infoPrenda.Categoria() != PSUPERIOR || pI.infoPrenda.Categoria() != PINFERIOR || pC.infoPrenda.Categoria() != CALZADO)
+			throw new uniformeInvalidoException(message = "un uniforme debe tener parte superior, inferior y calzado")
+		else
+			this.prendaSup = pS
+			this.prendaInf = pI
+			this.calzado = pC
+			this.institucion = institucion	
+
+
+class Usuario
+	String nombre;
+	List<Prenda> prendas;
+	List<Uniforme> uniformes;
+	List<String> sugerencias;
+
+	usuario(string nombre)
+		this nombre = nombre
+		prendas = new List<Prenda>
+		uniformes = new List<Uniforme>
+		sugerencias = new List<String>
+
+	agregarPrenda(Prenda prenda)
+		if(prenda.esValida())
+			prendas.add(prenda)
+
+	getLastPrenda()
+		return prendas(0)
+
+	agregarUniforme(Uniforme u)
+		uniformes.add(u)
+
+	agregarSugerencia(String s)
+		sugerencias.add(s)
+
+	sugerirUniforme(Uniforme u, Usuario otroUsuario)
+		otroUsuario.agregarSugerencia(u.toString)
+		
