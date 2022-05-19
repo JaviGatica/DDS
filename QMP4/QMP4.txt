@@ -1,0 +1,166 @@
+class InfoPrenda
+	Categoria categoria
+
+	infoPrenda(Categoria categoria)
+		this.categoria = categoria
+
+
+Enum Color = {ROJO, VERDE, AZUL, AMARILLO,...}
+	
+Enum Tipo = {REMERA, PANTALON, ZAPATILLAS, OJOTAS, COLLAR,....}
+
+Enum Categoria = {PSUPERIOR, PINFERIOR, CALZADO, ACCESORIO}
+
+Enum Tela = {LISA, RAYADA, LUNARES, ESTAMPADA}
+
+
+//asumo que la temperatura viene siempre en Celsius, sino delegaria a temperatura el tipo de medicion de temperatura y agregaria metodos de paso a Celsius
+class Material
+	Tela tela
+	Double temperaturaMaxima
+
+	soportaTemperatura(double temp)
+		return temperaturaMaxima >= temp
+
+class Prenda
+	InfoPrenda infoPrenda
+	Material material
+	Color colorPrincipal
+	Color colorSegundario 
+
+
+	prenda(InfoPrenda info, Material material, Color color1, Color color2)
+
+		this.InfoPrenda = info
+
+		if(material == null)
+			this.material = LISA
+		else	
+			this.material = material
+		this.colorPrincipal = color1
+		this.colorSegundario = color2
+
+	categoria()
+		this.infoPrenda.getCategoria()
+
+	
+
+//Si el infoPrenda correspondiente a una prenda no esta cargado en sistema no sera valido
+	esValida()
+		if(infoPrenda == NULL)
+			return false;
+		else
+			return true;
+	
+	esAptaParaClima(Double temperatura)
+		material.soportaTemperatura(temperatura)
+
+InfoPrenda pantalon = InfoPrenda(PINFERIOR)
+InfoPrenda remera = InfoPrenda(PSUPERIOR)
+InfoPrenda zapatillas = InfoPrenda(CALZADO)
+InfoPrenda collar = InfoPrenda(ACCESORIO)
+	...
+
+class Uniforme
+	Prenda prendaSup
+	Prenda prendaInf
+	Prenda calzado
+	String institucion	
+
+	uniforme(prenda pS, prenda pI, prenda pC, String institucion)
+		if(pS.categoria() != PSUPERIOR || pI.categoria() != PINFERIOR || pC.categoria() != CALZADO)
+			throw new uniformeInvalidoException(message = "un uniforme debe tener parte superior, inferior y calzado")
+		else
+			this.prendaSup = pS
+			this.prendaInf = pI
+			this.calzado = pC
+			this.institucion = institucion	
+
+	esAptoParaClima(Double temperatura)
+		return prendaSup.esAptaParaClima(temperatura) AND prendaInf.esAptaParaClima(temperatura) AND calzado.esAptaParaClima(temperatura)
+
+//NO ESTOY SEGURO COMO FUNCIONA ES MAS BIEN UN COPY PASTE PARA PODER DELEGAR EL CALCULO DE CLIMA FUERA DEL USUARIO
+class AccuWeatherAPI {
+	Map<String, Object> clima
+	AccuWeatherAPI accuWeatherAPI 
+
+	getSingletonInstance()
+		if( accuWeatherAPI == NULL )
+			this.accuWeatherAPI = new AccuWeatherAPI()
+		
+		return accuWeatherAPI;
+
+	//solo actualizo si la fecha no me sirve
+    	getWeather(String ciudad, Date fecha) {
+		if( !estaActualizado(fecha)) {
+			clima = Arrays.asList(new HashMap<String, Object>(){{
+				put("DateTime", "2019-05-03T01:00:00-03:00");
+				put("EpochDateTime", 1556856000);
+				put("WeatherIcon", 33);
+				put("IconPhrase", "Clear");
+				put("IsDaylight", false);
+				put("PrecipitationProbability", 0);
+				put("MobileLink", "http://m.accuweather.com/en/ar/villa-vil/7984/");
+				put("Link", "http://www.accuweather.com/en/ar/villa-vil/7984");
+				put("Temperature", new HashMap<String, Object>(){{
+					put("Value", 57);
+					put("Unit", "F");
+					put("UnitType", 18);
+					}});
+				}});
+		}
+	}
+
+	estaActualizado(Date fecha)
+		return (fecha != clima.get(0).get("DateTime").fecha();)
+
+	consultarDatoClima(String consulta)
+		return clima.get(0).get(consulta)
+
+}
+
+//Singleton para reducir costos, todos los usuarios consultan al mismo calculador
+AccuWeatherAPI calculadorClima = AccuWeatherAPI.getSingletonInstance();
+
+
+
+class Usuario
+	String nombre;
+	List<Prenda> prendas;
+	List<Uniforme> uniformes;
+	List<String> sugerencias;
+	
+	
+
+	usuario(string nombre)
+		this nombre = nombre
+		prendas = new List<Prenda>
+		uniformes = new List<Uniforme>
+		sugerencias = new List<String>
+
+	getTemperatura()
+		return calculadorClima.consultarDatoClima("Temperature");
+
+	getPosibilidadPrecipitaciones()
+		return calculadorClima.consultarDatoClima("PrecipitationProbability");
+	
+
+	agregarPrenda(Prenda prenda)
+		if(prenda.esValida())
+			prendas.add(prenda)
+
+	getLastPrenda()
+		return prendas(0)
+
+	agregarUniforme(Uniforme u)
+		uniformes.add(u)
+
+	agregarSugerencia(String s)
+		sugerencias.add(s)
+
+	sugerirUniforme(Uniforme u, Usuario otroUsuario)
+		if( !u.esAptoParaClima( this.getTemperatura() ) )
+		   throw new uniformeNoSeBancaTemperaturaException(message = "alguna prenda del uniforme no tolera la temperatura actual")
+		else
+		   otroUsuario.agregarSugerencia(u.toString)
+	
